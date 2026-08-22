@@ -20,25 +20,61 @@ function apiKey() {
   return key;
 }
 
-async function apiGet<T>(path: string): Promise<T[]> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    headers: { "x-apisports-key": apiKey() },
-  });
-  const body = (await res.json().catch(() => null)) as
-    | { response?: T[]; errors?: unknown }
-    | null;
-  if (!res.ok) {
-    console.error(`API-Football ${path} falhou [${res.status}]`, body);
-    throw new Error(`A API de futebol retornou erro ${res.status}.`);
-  }
+const RAPID_BASE = "https://api-football-v1.p.rapidapi.com/v3";
+
+type Body<T> = { response?: T[]; errors?: unknown } | null;
+
+function firstError<T>(body: Body<T>): string | null {
   const errors = body?.errors;
-  if (errors && !Array.isArray(errors) && Object.keys(errors).length > 0) {
-    console.error(`API-Football ${path} erro`, errors);
-    const first = Object.values(errors as Record<string, string>)[0];
-    throw new Error(first || "A API de futebol recusou a requisição.");
+  if (Array.isArray(errors)) return errors.length ? String(errors[0]) : null;
+  if (errors && Object.keys(errors).length > 0) {
+    return Object.values(errors as Record<string, string>)[0] ?? "erro";
   }
+  return null;
+}
+
+async function request<T>(
+  url: string,
+  headers: Record<string, string>,
+): Promise<{ res: Response; body: Body<T> }> {
+  const res = await fetch(url, { headers });
+  const body = (await res.json().catch(() => null)) as Body<T>;
+  return { res, body };
+}
+
+async function apiGet<T>(path: string): Promise<T[]> {
+  const key = apiKey();
+
+  // Chaves diretas (dashboard.api-football.com) usam o host api-sports.io.
+  let { res, body } = await request<T>(`${API_BASE}${path}`, {
+    "x-apisports-key": key,
+  });
+  let error = res.ok ? firstError(body) : `HTTP ${res.status}`;
+
+  // Chaves obtidas via RapidAPI só funcionam no host da RapidAPI.
+  if (error && /application key|token|HTTP 40[13]/i.test(error)) {
+    const retry = await request<T>(`${RAPID_BASE}${path}`, {
+      "x-rapidapi-key": key,
+      "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
+    });
+    res = retry.res;
+    body = retry.body;
+    error = res.ok ? firstError(body) : `HTTP ${res.status}`;
+  }
+
+  if (error) {
+    console.error(`API-Football ${path} erro:`, error);
+    if (/application key|token/i.test(error)) {
+      throw new Error(
+        "A chave da API de futebol foi recusada. Confira em dashboard.api-football.com (ou na RapidAPI) se ela está ativa e salve-a novamente.",
+      );
+    }
+    throw new Error(error);
+  }
+
   return body?.response ?? [];
 }
+
 
 const pct = (n: number, total: number) =>
   total > 0 ? Math.round((n / total) * 1000) / 10 : 0;
