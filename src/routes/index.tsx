@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Search, LoaderCircle, BarChart3 } from "lucide-react";
 
 import { analyzeTeamFn, searchTeamsFn } from "@/lib/football.functions";
-import type { TeamAnalysis, TeamHit } from "@/lib/football.server";
+import type { TeamAnalysis, TeamHit } from "@/lib/football.types";
 import { TeamAnalysisView } from "@/components/team-analysis";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

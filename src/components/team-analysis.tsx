@@ -1,4 +1,4 @@
-import type { TeamAnalysis } from "@/lib/football.server";
+import type { TeamAnalysis } from "@/lib/football.types";
 import { StatTile } from "@/components/stat-tile";
 import { Badge } from "@/components/ui/badge";
 
