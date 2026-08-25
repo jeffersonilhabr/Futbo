@@ -1,6 +1,8 @@
 import type { TeamAnalysis } from "@/lib/football.types";
 import { StatTile } from "@/components/stat-tile";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { BookmarkPlus } from "lucide-react";
 
 const rateTone = (v: number) => (v >= 65 ? "good" : v >= 45 ? "warn" : "bad");
 
@@ -8,10 +10,12 @@ function BetLine({
   market,
   rate,
   detail,
+  onSave,
 }: {
   market: string;
   rate: number | null;
   detail: string;
+  onSave?: (market: string, rate: number | null) => void;
 }) {
   const value = rate ?? 0;
   const label =
@@ -50,9 +54,21 @@ function BetLine({
       <Badge variant="outline" className="hidden w-24 justify-center sm:flex">
         {label}
       </Badge>
+      {onSave && (
+        <Button
+          size="icon"
+          variant="ghost"
+          aria-label={`Salvar palpite: ${market}`}
+          title="Salvar como palpite"
+          onClick={() => onSave(market, rate)}
+        >
+          <BookmarkPlus className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 }
+
 
 export function TeamAnalysisView({ data }: { data: TeamAnalysis }) {
   const { team } = data;
