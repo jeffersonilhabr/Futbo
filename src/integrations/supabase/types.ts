@@ -14,7 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      palpites: {
+        Row: {
+          created_at: string
+          id: string
+          market: string
+          match_date: string | null
+          note: string | null
+          rate: number | null
+          sample: number | null
+          settled_at: string | null
+          status: Database["public"]["Enums"]["palpite_status"]
+          team_id: number | null
+          team_logo: string | null
+          team_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          market: string
+          match_date?: string | null
+          note?: string | null
+          rate?: number | null
+          sample?: number | null
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["palpite_status"]
+          team_id?: number | null
+          team_logo?: string | null
+          team_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          market?: string
+          match_date?: string | null
+          note?: string | null
+          rate?: number | null
+          sample?: number | null
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["palpite_status"]
+          team_id?: number | null
+          team_logo?: string | null
+          team_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +73,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      palpite_status: "pendente" | "green" | "red"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +200,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      palpite_status: ["pendente", "green", "red"],
+    },
   },
 } as const
