@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 export const searchTeamsFn = createServerFn({ method: "POST" })
-  .inputValidator((input) =>
+  .validator((input) =>
     z.object({ query: z.string().trim().min(2).max(60) }).parse(input),
   )
   .handler(async ({ data }) => {
@@ -11,7 +11,7 @@ export const searchTeamsFn = createServerFn({ method: "POST" })
   });
 
 export const analyzeTeamFn = createServerFn({ method: "POST" })
-  .inputValidator((input) =>
+  .validator((input) =>
     z
       .object({
         teamId: z.number().int().positive(),

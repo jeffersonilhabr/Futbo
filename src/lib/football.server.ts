@@ -10,14 +10,16 @@ import type {
 
 const API_BASE = "https://v3.football.api-sports.io";
 
+const DEMO_TEAMS: TeamHit[] = [
+  { id: 1, name: "Palmeiras", logo: null, country: "Brasil", founded: 1914 },
+  { id: 2, name: "Flamengo", logo: null, country: "Brasil", founded: 1895 },
+  { id: 3, name: "Inter", logo: null, country: "Brasil", founded: 1909 },
+  { id: 4, name: "Arsenal", logo: null, country: "Inglaterra", founded: 1886 },
+  { id: 5, name: "Barcelona", logo: null, country: "Espanha", founded: 1899 },
+];
+
 function apiKey() {
-  const key = process.env["API_FOOTBALL_KEY"];
-  if (!key) {
-    throw new Error(
-      "A chave da API de futebol não está configurada (API_FOOTBALL_KEY).",
-    );
-  }
-  return key;
+  return process.env["API_FOOTBALL_KEY"]?.trim() || undefined;
 }
 
 const RAPID_BASE = "https://api-football-v1.p.rapidapi.com/v3";
@@ -44,6 +46,7 @@ async function request<T>(
 
 async function apiGet<T>(path: string): Promise<T[]> {
   const key = apiKey();
+  if (!key) return [];
 
   // Chaves diretas (dashboard.api-football.com) usam o host api-sports.io.
   let { res, body } = await request<T>(`${API_BASE}${path}`, {
@@ -83,7 +86,22 @@ const avg = (values: number[]) =>
     ? Math.round((values.reduce((a, b) => a + b, 0) / values.length) * 100) / 100
     : 0;
 
+function buildDemoSearchResults(query: string): TeamHit[] {
+  const normalized = query.trim().toLowerCase();
+  const matches = DEMO_TEAMS.filter((team) => {
+    if (!normalized) return true;
+    const haystack = `${team.name} ${team.country}`.toLowerCase();
+    return haystack.includes(normalized);
+  });
+
+  return (matches.length ? matches : DEMO_TEAMS).slice(0, 6);
+}
+
 export async function searchTeams(query: string): Promise<TeamHit[]> {
+  if (!apiKey()) {
+    return buildDemoSearchResults(query);
+  }
+
   type Raw = {
     team: {
       id: number;
@@ -132,10 +150,85 @@ function statValue(entry: StatsRaw | undefined, types: string[]): number | null 
   return found ? sum : null;
 }
 
+function buildDemoAnalysis(teamId: number, last: number): TeamAnalysis {
+  const team = DEMO_TEAMS.find((item) => item.id === teamId) ?? {
+    ...DEMO_TEAMS[0],
+    id: teamId,
+    name: `Time Demo ${teamId}`,
+  };
+
+  const formSequence: Array<"W" | "D" | "L"> = ["W", "W", "D", "L", "W", "D", "W", "L", "W", "W"];
+  const matches: MatchRow[] = Array.from({ length: Math.max(5, Math.min(last, 10)) }, (_, idx) => {
+    const result = formSequence[idx % formSequence.length];
+    const goalsFor = result === "W" ? 2 + (idx % 2) : result === "D" ? 1 + (idx % 2) : idx % 3;
+    const goalsAgainst = result === "L" ? 2 + (idx % 2) : result === "D" ? 1 : idx % 2;
+    const corners = 4 + ((idx * 2) % 7);
+    const cards = idx % 3;
+
+    return {
+      fixtureId: idx + 1000,
+      date: new Date(Date.now() - idx * 86400000 * 4).toISOString(),
+      league: idx % 2 === 0 ? "Brasileirão" : "Liga Nacional",
+      opponent: ["São Paulo", "Grêmio", "Cruzeiro", "Atlético", "Vasco"][idx % 5] ?? "Adversário",
+      home: idx % 2 === 0,
+      goalsFor,
+      goalsAgainst,
+      result,
+      corners,
+      cornersTotal: corners + 3 + (idx % 4),
+      cards,
+      cardsTotal: cards + 2 + (idx % 3),
+    };
+  });
+
+  const n = matches.length;
+  const wins = matches.filter((m) => m.result === "W").length;
+  const draws = matches.filter((m) => m.result === "D").length;
+  const losses = matches.filter((m) => m.result === "L").length;
+  const totals = matches.map((m) => m.goalsFor + m.goalsAgainst);
+  const cornerTotals = matches.map((m) => m.cornersTotal).filter((value): value is number => value !== null);
+  const cardTotals = matches.map((m) => m.cardsTotal).filter((value): value is number => value !== null);
+
+  return {
+    team,
+    matches,
+    sample: n,
+    statsSample: cornerTotals.length,
+    form: matches.slice(0, 5).map((m) => m.result),
+    wins,
+    draws,
+    losses,
+    winRate: pct(wins, n),
+    drawRate: pct(draws, n),
+    lossRate: pct(losses, n),
+    avgGoalsFor: avg(matches.map((m) => m.goalsFor)),
+    avgGoalsAgainst: avg(matches.map((m) => m.goalsAgainst)),
+    avgGoalsTotal: avg(totals),
+    over15: pct(totals.filter((t) => t > 1.5).length, n),
+    over25: pct(totals.filter((t) => t > 2.5).length, n),
+    over35: pct(totals.filter((t) => t > 3.5).length, n),
+    btts: pct(matches.filter((m) => m.goalsFor > 0 && m.goalsAgainst > 0).length, n),
+    cleanSheets: pct(matches.filter((m) => m.goalsAgainst === 0).length, n),
+    scoredRate: pct(matches.filter((m) => m.goalsFor > 0).length, n),
+    avgCorners: avg(matches.map((m) => m.corners ?? 0)),
+    avgCornersTotal: avg(cornerTotals),
+    cornersOver85: pct(cornerTotals.filter((c) => c > 8.5).length, cornerTotals.length || 1),
+    cornersOver95: pct(cornerTotals.filter((c) => c > 9.5).length, cornerTotals.length || 1),
+    avgCards: avg(matches.map((m) => m.cards ?? 0)),
+    avgCardsTotal: avg(cardTotals),
+    cardsOver35: pct(cardTotals.filter((c) => c > 3.5).length, cardTotals.length || 1),
+    cardsOver45: pct(cardTotals.filter((c) => c > 4.5).length, cardTotals.length || 1),
+  };
+}
+
 export async function analyzeTeam(
   teamId: number,
   last: number,
 ): Promise<TeamAnalysis> {
+  if (!apiKey()) {
+    return buildDemoAnalysis(teamId, last);
+  }
+
   const [teamRow] = await apiGet<{
     team: {
       id: number;
