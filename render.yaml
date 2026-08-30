@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: futbo
+    env: node
+    branch: main
+    buildCommand: npm install && npm run build
+    startCommand: node .output/server/index.mjs
+    autoDeploy: true
+    envVars:
+      - key: NITRO_PRESET
+        value: render_com
+      - key: NODE_VERSION
+        value: "20"

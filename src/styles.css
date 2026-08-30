@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Design system — "Stadium Night": fundo escuro de arquibancada,
- * verde de gramado como cor primária e âmbar para destaques de aposta.
+ * Design system — "Midnight Green": fundo preto com verde eletrizante,
+ * mantendo contraste alto e foco em detalhes de destaque esportivos.
  * Todas as cores em oklch e sempre via tokens semânticos.
  */
 
@@ -54,32 +54,32 @@
 
 :root {
   --radius: 0.75rem;
-  --background: oklch(0.19 0.03 165);
-  --foreground: oklch(0.96 0.01 150);
-  --card: oklch(0.24 0.035 168);
-  --card-foreground: oklch(0.96 0.01 150);
-  --popover: oklch(0.22 0.033 168);
-  --popover-foreground: oklch(0.96 0.01 150);
-  --primary: oklch(0.78 0.2 146);
-  --primary-foreground: oklch(0.19 0.05 160);
-  --secondary: oklch(0.29 0.035 170);
-  --secondary-foreground: oklch(0.95 0.01 150);
-  --muted: oklch(0.27 0.03 170);
-  --muted-foreground: oklch(0.72 0.02 160);
-  --accent: oklch(0.82 0.16 82);
-  --accent-foreground: oklch(0.22 0.05 80);
+  --background: oklch(0.05 0.02 150);
+  --foreground: oklch(0.97 0.01 150);
+  --card: oklch(0.09 0.02 150);
+  --card-foreground: oklch(0.97 0.01 150);
+  --popover: oklch(0.08 0.02 150);
+  --popover-foreground: oklch(0.97 0.01 150);
+  --primary: oklch(0.74 0.22 145);
+  --primary-foreground: oklch(0.05 0.02 150);
+  --secondary: oklch(0.13 0.02 150);
+  --secondary-foreground: oklch(0.96 0.01 150);
+  --muted: oklch(0.16 0.02 150);
+  --muted-foreground: oklch(0.76 0.02 150);
+  --accent: oklch(0.8 0.18 145);
+  --accent-foreground: oklch(0.04 0.02 150);
   --destructive: oklch(0.62 0.2 22);
   --destructive-foreground: oklch(0.97 0.01 60);
-  --success: oklch(0.75 0.18 150);
-  --success-foreground: oklch(0.2 0.05 160);
-  --warning: oklch(0.82 0.16 82);
-  --warning-foreground: oklch(0.22 0.05 80);
-  --border: oklch(0.34 0.035 168);
-  --input: oklch(0.3 0.035 168);
-  --ring: oklch(0.78 0.2 146);
-  --chart-1: oklch(0.78 0.2 146);
-  --chart-2: oklch(0.82 0.16 82);
-  --chart-3: oklch(0.68 0.14 200);
+  --success: oklch(0.76 0.18 145);
+  --success-foreground: oklch(0.04 0.02 150);
+  --warning: oklch(0.78 0.18 145);
+  --warning-foreground: oklch(0.04 0.02 150);
+  --border: oklch(0.27 0.08 145);
+  --input: oklch(0.12 0.02 150);
+  --ring: oklch(0.74 0.22 145);
+  --chart-1: oklch(0.76 0.2 145);
+  --chart-2: oklch(0.86 0.18 145);
+  --chart-3: oklch(0.69 0.14 200);
   --chart-4: oklch(0.62 0.2 22);
   --chart-5: oklch(0.72 0.02 160);
 }
@@ -99,14 +99,14 @@
     font-family: var(--font-sans);
     background-image:
       radial-gradient(
-        ellipse 70% 45% at 50% -8%,
-        oklch(0.78 0.2 146 / 0.18),
-        transparent 70%
+        ellipse 80% 50% at 50% -10%,
+        oklch(0.76 0.22 145 / 0.25),
+        transparent 65%
       ),
-      repeating-linear-gradient(
-        90deg,
-        oklch(1 0 0 / 0.02) 0 48px,
-        transparent 48px 96px
+      linear-gradient(
+        180deg,
+        oklch(0.03 0.01 150) 0%,
+        oklch(0.05 0.02 150) 100%
       );
     background-attachment: fixed;
   }
