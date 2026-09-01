@@ -16,6 +16,11 @@ export function SiteHeader() {
           <BarChart3 className="h-5 w-5 text-primary" /> Placar Analítico
         </Link>
         <Button asChild variant="ghost" size="sm">
+          <Link to="/robo">
+            <Bot className="h-4 w-4" /> Pedir ao robô
+          </Link>
+        </Button>
+        <Button asChild variant="ghost" size="sm">
           <Link to="/palpites">
             <ListChecks className="h-4 w-4" /> Meus palpites
           </Link>
