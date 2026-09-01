@@ -151,15 +151,15 @@ function statValue(entry: StatsRaw | undefined, types: string[]): number | null 
 }
 
 function buildDemoAnalysis(teamId: number, last: number): TeamAnalysis {
-  const team = DEMO_TEAMS.find((item) => item.id === teamId) ?? {
-    ...DEMO_TEAMS[0],
+  const team: TeamHit = DEMO_TEAMS.find((item) => item.id === teamId) ?? {
+    ...DEMO_TEAMS[0]!,
     id: teamId,
     name: `Time Demo ${teamId}`,
   };
 
   const formSequence: Array<"W" | "D" | "L"> = ["W", "W", "D", "L", "W", "D", "W", "L", "W", "W"];
   const matches: MatchRow[] = Array.from({ length: Math.max(5, Math.min(last, 10)) }, (_, idx) => {
-    const result = formSequence[idx % formSequence.length];
+    const result = formSequence[idx % formSequence.length]!;
     const goalsFor = result === "W" ? 2 + (idx % 2) : result === "D" ? 1 + (idx % 2) : idx % 3;
     const goalsAgainst = result === "L" ? 2 + (idx % 2) : result === "D" ? 1 : idx % 2;
     const corners = 4 + ((idx * 2) % 7);
@@ -233,8 +233,8 @@ export async function analyzeTeam(
     team: {
       id: number;
       name: string;
-      logo: string | null;
-      country: string | null;
+      logo: string;
+      country: string;
       founded: number | null;
     };
   }>(`/teams?id=${teamId}`);

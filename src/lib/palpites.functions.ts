@@ -113,8 +113,8 @@ export const listBotPredictionsFn = createServerFn({ method: "POST" })
     // In production, you'd have a dedicated bot account
     const { createClient } = await import("@supabase/supabase-js");
     const supabase = createClient(
-      process.env.PUBLIC_SUPABASE_URL || "",
-      process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+      process.env["PUBLIC_SUPABASE_URL"] || "",
+      process.env["SUPABASE_SERVICE_ROLE_KEY"] || "",
       {
         auth: { persistSession: false },
       },

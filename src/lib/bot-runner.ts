@@ -19,8 +19,8 @@ export async function runBotPredictions() {
     }
 
     // Initialize Supabase with service role
-    const supabaseUrl = process.env.PUBLIC_SUPABASE_URL;
-    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseUrl = process.env["PUBLIC_SUPABASE_URL"];
+    const serviceRoleKey = process.env["SUPABASE_SERVICE_ROLE_KEY"];
 
     if (!supabaseUrl || !serviceRoleKey) {
       throw new Error("Missing Supabase credentials");
@@ -32,7 +32,7 @@ export async function runBotPredictions() {
 
     // Use a fixed bot user ID - you'll need to create this user
     // For now, we'll use a placeholder
-    const BOT_USER_ID = process.env.BOT_USER_ID || "00000000-0000-0000-0000-000000000000";
+    const BOT_USER_ID = process.env["BOT_USER_ID"] || "00000000-0000-0000-0000-000000000000";
 
     // Save predictions
     const savedPalpites = [];
