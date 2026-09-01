@@ -151,8 +151,8 @@ function statValue(entry: StatsRaw | undefined, types: string[]): number | null 
 }
 
 function buildDemoAnalysis(teamId: number, last: number): TeamAnalysis {
-  const team = DEMO_TEAMS.find((item) => item.id === teamId) ?? {
-    ...DEMO_TEAMS[0],
+  const team: TeamHit = DEMO_TEAMS.find((item) => item.id === teamId) ?? {
+    ...DEMO_TEAMS[0]!,
     id: teamId,
     name: `Time Demo ${teamId}`,
   };
