@@ -9,6 +9,7 @@ import type { TeamAnalysis, TeamHit } from "@/lib/football.types";
 import { TeamAnalysisView } from "@/components/team-analysis";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -131,25 +132,32 @@ function Index() {
 
       {teams && teams.length > 1 && (
         <div className="mt-6">
-          <h2 className="mb-3 text-xl">Selecione o time</h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {teams.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => analyzeMutation.mutate(t.id)}
-                className="panel flex items-center gap-3 p-3 text-left transition-colors hover:border-primary"
-              >
-                {t.logo && <img src={t.logo} alt="" className="h-8 w-8" />}
-                <span>
-                  <span className="block font-semibold">{t.name}</span>
-                  <span className="block text-xs text-muted-foreground">
-                    {t.country ?? "—"}
+          <h2 className="mb-3 text-xl">
+            Selecione o time{" "}
+            <span className="text-sm text-muted-foreground">
+              ({teams.length} {teams.length === 1 ? "resultado" : "resultados"})
+            </span>
+          </h2>
+          <ScrollArea className="h-auto max-h-[600px] w-full rounded-lg border border-border p-4">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {teams.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => analyzeMutation.mutate(t.id)}
+                  className="panel flex items-center gap-3 p-3 text-left transition-colors hover:border-primary"
+                >
+                  {t.logo && <img src={t.logo} alt="" className="h-8 w-8" />}
+                  <span>
+                    <span className="block font-semibold">{t.name}</span>
+                    <span className="block text-xs text-muted-foreground">
+                      {t.country ?? "—"}
+                    </span>
                   </span>
-                </span>
-              </button>
-            ))}
-          </div>
+                </button>
+              ))}
+            </div>
+          </ScrollArea>
         </div>
       )}
 

@@ -97,3 +97,39 @@ export const deletePalpiteFn = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+// Bot predictions - public read, internal write
+export const listBotPredictionsFn = createServerFn({ method: "POST" })
+  .validator((input) =>
+    z
+      .object({
+        limit: z.number().int().default(5),
+        hoursAgo: z.number().int().default(24),
+      })
+      .parse(input ?? {}),
+  )
+  .handler(async ({ data }) => {
+    // Note: This would need a bot user ID - for now we'll filter by a special marker
+    // In production, you'd have a dedicated bot account
+    const { createClient } = await import("@supabase/supabase-js");
+    const supabase = createClient(
+      process.env.PUBLIC_SUPABASE_URL || "",
+      process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+      {
+        auth: { persistSession: false },
+      },
+    );
+
+    const hoursAgo = new Date(Date.now() - data.hoursAgo * 60 * 60 * 1000).toISOString();
+    const { data: rows, error } = await supabase
+      .from("palpites")
+      .select("*")
+      .like("note", "%[BOT]%")
+      .gte("created_at", hoursAgo)
+      .order("created_at", { ascending: false })
+      .limit(data.limit);
+
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+

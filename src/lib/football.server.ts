@@ -94,7 +94,7 @@ function buildDemoSearchResults(query: string): TeamHit[] {
     return haystack.includes(normalized);
   });
 
-  return (matches.length ? matches : DEMO_TEAMS).slice(0, 6);
+  return matches.length ? matches : DEMO_TEAMS;
 }
 
 export async function searchTeams(query: string): Promise<TeamHit[]> {
@@ -112,7 +112,7 @@ export async function searchTeams(query: string): Promise<TeamHit[]> {
     };
   };
   const rows = await apiGet<Raw>(`/teams?search=${encodeURIComponent(query)}`);
-  return rows.slice(0, 12).map((r) => ({
+  return rows.map((r) => ({
     id: r.team.id,
     name: r.team.name,
     logo: r.team.logo,
