@@ -233,8 +233,8 @@ export async function analyzeTeam(
     team: {
       id: number;
       name: string;
-      logo: string | null;
-      country: string | null;
+      logo: string;
+      country: string;
       founded: number | null;
     };
   }>(`/teams?id=${teamId}`);
