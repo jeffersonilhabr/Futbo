@@ -2,13 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Check, LoaderCircle, Trash2, X, RotateCcw } from "lucide-react";
+import { Check, LoaderCircle, Trash2, X, RotateCcw, Zap } from "lucide-react";
 
 import {
   deletePalpiteFn,
   listPalpitesFn,
   setPalpiteStatusFn,
 } from "@/lib/palpites.functions";
+import { runBotPredictionsFn } from "@/routes/api/bot-predictions";
 import { SiteHeader } from "@/components/site-header";
 import { StatTile } from "@/components/stat-tile";
 import { Button } from "@/components/ui/button";
@@ -58,6 +59,7 @@ function PalpitesPage() {
   const list = useServerFn(listPalpitesFn);
   const setStatusFn = useServerFn(setPalpiteStatusFn);
   const removeFn = useServerFn(deletePalpiteFn);
+  const runBot = useServerFn(runBotPredictionsFn);
   const qc = useQueryClient();
 
   const filters = {
@@ -82,6 +84,13 @@ function PalpitesPage() {
     onSuccess: invalidate,
   });
 
+  const botMutation = useMutation({
+    mutationFn: () => runBot({ data: {} }),
+    onSuccess: () => {
+      setTimeout(() => invalidate(), 2000); // Aguarda 2s para o bot gerar os palpites
+    },
+  });
+
   const rows = data ?? [];
   const greens = rows.filter((r) => r.status === "green").length;
   const reds = rows.filter((r) => r.status === "red").length;
@@ -98,6 +107,53 @@ function PalpitesPage() {
           Histórico das análises enviadas. Marque cada palpite como acertou ou errou
           para acompanhar seu aproveitamento.
         </p>
+
+        {/* Bot Predictions Card */}
+        <div className="panel mt-8 bg-gradient-to-r from-primary/10 via-transparent to-primary/5 border-primary/30 p-4 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Zap className="h-5 w-5 text-primary" />
+              <h3 className="font-semibold text-lg">Bot de Palpites</h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Clique para gerar palpites dos 5 melhores jogos do dia automaticamente
+            </p>
+          </div>
+          <Button
+            onClick={() => botMutation.mutate()}
+            disabled={botMutation.isPending}
+            className="ml-4"
+            size="lg"
+          >
+            {botMutation.isPending ? (
+              <>
+                <LoaderCircle className="h-4 w-4 animate-spin mr-2" />
+                Gerando...
+              </>
+            ) : (
+              <>
+                <Zap className="h-4 w-4 mr-2" />
+                Gerar Palpites
+              </>
+            )}
+          </Button>
+        </div>
+
+        {botMutation.isSuccess && (
+          <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4 text-green-900 dark:border-green-900/30 dark:bg-green-900/20 dark:text-green-200">
+            <p className="font-semibold">✓ Palpites do bot gerados com sucesso!</p>
+            <p className="text-sm mt-1">Recarregando lista...</p>
+          </div>
+        )}
+
+        {botMutation.isError && (
+          <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-red-900 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-200">
+            <p className="font-semibold">✗ Erro ao gerar palpites</p>
+            <p className="text-sm">
+              {botMutation.error instanceof Error ? botMutation.error.message : "Unknown error"}
+            </p>
+          </div>
+        )}
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatTile

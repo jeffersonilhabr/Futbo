@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedPalpitesRouteImport } from './routes/_authenticated/palpites'
+import { Route as AdminBotRouteImport } from './routes/admin/bot'
+import { Route as ApiBotPredictionsRouteImport } from './routes/api/bot-predictions'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -33,16 +35,30 @@ const AuthenticatedPalpitesRoute = AuthenticatedPalpitesRouteImport.update({
   path: '/palpites',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AdminBotRoute = AdminBotRouteImport.update({
+  id: '/admin/bot',
+  path: '/admin/bot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBotPredictionsRoute = ApiBotPredictionsRouteImport.update({
+  id: '/api/bot-predictions',
+  path: '/api/bot-predictions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/palpites': typeof AuthenticatedPalpitesRoute
+  '/admin/bot': typeof AdminBotRoute
+  '/api/bot-predictions': typeof ApiBotPredictionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/palpites': typeof AuthenticatedPalpitesRoute
+  '/admin/bot': typeof AdminBotRoute
+  '/api/bot-predictions': typeof ApiBotPredictionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -50,20 +66,30 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/palpites': typeof AuthenticatedPalpitesRoute
+  '/admin/bot': typeof AdminBotRoute
+  '/api/bot-predictions': typeof ApiBotPredictionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/palpites'
+  fullPaths: '/' | '/auth' | '/palpites' | '/admin/bot' | '/api/bot-predictions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/palpites'
+  to: '/' | '/auth' | '/palpites' | '/admin/bot' | '/api/bot-predictions'
   id:
-    '__root__' | '/' | '/_authenticated' | '/auth' | '/_authenticated/palpites'
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/palpites'
+    | '/admin/bot'
+    | '/api/bot-predictions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  AdminBotRoute: typeof AdminBotRoute
+  ApiBotPredictionsRoute: typeof ApiBotPredictionsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -96,6 +122,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPalpitesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/admin/bot': {
+      id: '/admin/bot'
+      path: '/admin/bot'
+      fullPath: '/admin/bot'
+      preLoaderRoute: typeof AdminBotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/bot-predictions': {
+      id: '/api/bot-predictions'
+      path: '/api/bot-predictions'
+      fullPath: '/api/bot-predictions'
+      preLoaderRoute: typeof ApiBotPredictionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -114,6 +154,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  AdminBotRoute: AdminBotRoute,
+  ApiBotPredictionsRoute: ApiBotPredictionsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
