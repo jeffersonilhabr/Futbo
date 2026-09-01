@@ -107,10 +107,12 @@ export const askRoboFn = createServerFn({ method: "POST" })
 
     try {
       const parsed = JSON.parse(content) as RoboAnswer;
-      return {
-        resposta: parsed.resposta ?? "",
-        palpites: Array.isArray(parsed.palpites) ? parsed.palpites : [],
-      };
+      const palpites = (Array.isArray(parsed.palpites) ? parsed.palpites : []).map((tip) => ({
+        ...tip,
+        // o modelo às vezes devolve 0-1, às vezes 0-100
+        confianca: Math.max(0, Math.min(100, tip.confianca <= 1 ? tip.confianca * 100 : tip.confianca)),
+      }));
+      return { resposta: parsed.resposta ?? "", palpites };
     } catch {
       return { resposta: content || "O robô não conseguiu responder agora.", palpites: [] };
     }
