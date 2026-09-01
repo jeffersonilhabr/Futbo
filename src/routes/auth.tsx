@@ -81,7 +81,6 @@ function AuthPage() {
 
   return (
     <>
-      <SiteHeader />
       <main className="mx-auto w-full max-w-md px-4 py-16">
         <h1 className="text-4xl">{mode === "login" ? "Entrar" : "Criar conta"}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
