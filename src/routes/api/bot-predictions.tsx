@@ -9,13 +9,23 @@ export const runBotPredictionsFn = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     // Optional: Verify secret token if provided
-    const expectedSecret = process.env.BOT_SECRET;
+    const expectedSecret = process.env["BOT_SECRET"];
     if (expectedSecret && data.secret !== expectedSecret) {
       throw new Error("Unauthorized: Invalid secret");
     }
 
     const { runBotPredictions } = await import("@/lib/bot-runner");
-    return await runBotPredictions();
+    const result = await runBotPredictions();
+
+    if (!result.success) {
+      return { success: false, message: result.message };
+    }
+
+    return {
+      success: true,
+      message: result.message,
+      predictions: result.predictions,
+    };
   });
 
 export const Route = createFileRoute("/api/bot-predictions")({
