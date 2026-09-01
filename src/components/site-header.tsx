@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { BarChart3, ListChecks, LogIn, LogOut } from "lucide-react";
+import { BarChart3, Bot, ListChecks, LogIn, LogOut } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
