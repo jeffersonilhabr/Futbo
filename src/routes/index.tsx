@@ -177,77 +177,19 @@ function Index() {
   );
 }
 
+import robotMascot from "../../public/robot-mascot.png";
+
 function RobotMascot() {
   return (
     <div className="relative flex h-[280px] w-[280px] items-center justify-center overflow-visible">
       <div className="absolute inset-8 rounded-full bg-primary/20 blur-3xl" />
-      <svg
-        viewBox="0 0 320 280"
-        className="relative h-full w-full drop-shadow-[0_0_55px_rgba(52,211,153,0.55)]"
-        role="img"
-        aria-label="Robô futurista segurando uma bola de futebol"
-      >
-        <defs>
-          <linearGradient id="bot-shell" x1="0%" x2="100%" y1="0%" y2="100%">
-            <stop offset="0%" stopColor="#d9f99d" />
-            <stop offset="26%" stopColor="#86efac" />
-            <stop offset="72%" stopColor="#34d399" />
-            <stop offset="100%" stopColor="#15803d" />
-          </linearGradient>
-          <linearGradient id="visor-glow" x1="0%" x2="100%" y1="0%" y2="0%">
-            <stop offset="0%" stopColor="#ecfeff" />
-            <stop offset="40%" stopColor="#a7f3d0" />
-            <stop offset="100%" stopColor="#4ade80" />
-          </linearGradient>
-          <linearGradient id="arm-glow" x1="0%" x2="100%" y1="0%" y2="0%">
-            <stop offset="0%" stopColor="#bbf7d0" />
-            <stop offset="100%" stopColor="#22c55e" />
-          </linearGradient>
-          <radialGradient id="ball-astro" cx="35%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="100%" stopColor="#dbeafe" />
-          </radialGradient>
-        </defs>
-
-        <g>
-          <circle cx="160" cy="38" r="10" fill="#86efac" />
-          <path d="M160 48V70" stroke="#86efac" strokeWidth="5" strokeLinecap="round"/>
-          <circle cx="160" cy="80" r="18" fill="#0b1220" stroke="#86efac" strokeWidth="3"/>
-          <circle cx="160" cy="80" r="10" fill="#a7f3d0" opacity="0.9"/>
-
-          <path d="M86 112c0-31 25-56 56-56h36c31 0 56 25 56 56v46c0 40-33 73-73 73h-2c-40 0-73-33-73-73v-46Z" fill="#0b1220" stroke="#6ee7b7" strokeWidth="4"/>
-          <path d="M102 118h116c22 0 39 17 39 39v17H63v-17c0-22 17-39 39-39Z" fill="url(#bot-shell)" opacity="0.95"/>
-
-          <rect x="87" y="98" width="146" height="68" rx="22" fill="#07130d" stroke="#86efac" strokeWidth="3"/>
-          <rect x="100" y="110" width="120" height="44" rx="16" fill="#07130d" stroke="url(#visor-glow)" strokeWidth="3"/>
-          <path d="M116 132h88" stroke="url(#visor-glow)" strokeWidth="7" strokeLinecap="round"/>
-          <circle cx="120" cy="132" r="6" fill="#dcfce7" />
-          <circle cx="200" cy="132" r="6" fill="#dcfce7" />
-          <path d="M132 152c11 8 19 12 28 12s17-4 28-12" stroke="#0f172a" strokeWidth="6" strokeLinecap="round" fill="none"/>
-
-          <path d="M88 146c-22 10-32 29-36 48" stroke="url(#arm-glow)" strokeWidth="12" strokeLinecap="round" fill="none"/>
-          <path d="M232 146c22 10 32 29 36 48" stroke="url(#arm-glow)" strokeWidth="12" strokeLinecap="round" fill="none"/>
-          <path d="M70 192c-12 12-20 24-24 35" stroke="#86efac" strokeWidth="9" strokeLinecap="round"/>
-          <path d="M250 192c12 12 20 24 24 35" stroke="#86efac" strokeWidth="9" strokeLinecap="round"/>
-
-          <g>
-            <circle cx="120" cy="177" r="12" fill="#0b1220" stroke="#86efac" strokeWidth="3"/>
-            <circle cx="200" cy="177" r="12" fill="#0b1220" stroke="#86efac" strokeWidth="3"/>
-            <rect x="111" y="190" width="98" height="20" rx="9" fill="#07130d" stroke="#86efac" strokeWidth="3"/>
-            <circle cx="134" cy="200" r="7" fill="#4ade80" />
-            <circle cx="177" cy="200" r="7" fill="#4ade80" />
-          </g>
-
-          <g transform="translate(250 128)">
-            <circle cx="0" cy="0" r="30" fill="url(#ball-astro)" stroke="#0f172a" strokeWidth="4"/>
-            <path d="M-14 -18L14 -18M-18 -6H18M-14 18L14 18M-18 6H18M-22 -12L-8 0L-22 12M22 -12L8 0L22 12" stroke="#0f172a" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-            <path d="M-8 -8L8 8M8 -8L-8 8" stroke="#0f172a" strokeWidth="2.5" opacity="0.7"/>
-          </g>
-
-          <circle cx="96" cy="105" r="8" fill="#86efac" opacity="0.85"/>
-          <circle cx="224" cy="105" r="8" fill="#86efac" opacity="0.85"/>
-        </g>
-      </svg>
+      <img
+        src={robotMascot}
+        alt="Robô mascote segurando bolas de futebol"
+        width={280}
+        height={280}
+        className="relative h-full w-full object-contain drop-shadow-[0_0_55px_rgba(52,211,153,0.55)]"
+      />
     </div>
   );
 }
