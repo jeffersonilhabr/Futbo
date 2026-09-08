@@ -49,9 +49,75 @@ const sugestoes = [
   "Palpites de cartões na Premier League",
 ];
 
+const riscos = [
+  { valor: "baixo" as const, rotulo: "Seguro" },
+  { valor: "medio" as const, rotulo: "Equilibrado" },
+  { valor: "alto" as const, rotulo: "Ousado" },
+];
+
+function BilheteCard({
+  bilhete,
+  onSalvar,
+  salvando,
+}: {
+  bilhete: Bilhete;
+  onSalvar: () => void;
+  salvando: boolean;
+}) {
+  return (
+    <div className="panel mt-4 space-y-4 p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h3 className="flex items-center gap-2 font-display text-2xl">
+          <Ticket className="h-5 w-5 text-primary" /> {bilhete.titulo}
+        </h3>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary">Risco: {bilhete.risco}</Badge>
+          <Badge>Odd ~{bilhete.oddTotal.toFixed(2)}</Badge>
+        </div>
+      </div>
+
+      <ol className="space-y-2">
+        {bilhete.entradas.map((entrada, index) => (
+          <li
+            key={index}
+            className="flex flex-wrap items-center gap-3 rounded-xl border border-border/60 bg-background/60 px-3 py-2"
+          >
+            <span className="font-display text-lg text-muted-foreground">{index + 1}</span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold">{entrada.jogo}</p>
+              <p className="text-sm text-primary">{entrada.mercado}</p>
+              <p className="text-xs text-muted-foreground">{entrada.justificativa}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm font-semibold">{entrada.probabilidade}%</p>
+              <p className="text-xs text-muted-foreground">odd {entrada.oddEstimada.toFixed(2)}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/60 pt-3">
+        <p className="text-sm text-muted-foreground">
+          Chance do bilhete inteiro: <strong>{bilhete.probabilidadeTotal}%</strong>
+        </p>
+        <Button onClick={onSalvar} disabled={salvando}>
+          Salvar bilhete no histórico
+        </Button>
+      </div>
+
+      <p className="text-xs text-muted-foreground">{bilhete.resumo}</p>
+    </div>
+  );
+}
+
 function RoboPage() {
   const ask = useServerFn(askRoboFn);
+  const montarBilhete = useServerFn(montarBilheteFn);
   const createPalpite = useServerFn(createPalpiteFn);
+  const [contexto, setContexto] = useState("");
+  const [qtdEntradas, setQtdEntradas] = useState(3);
+  const [risco, setRisco] = useState<"baixo" | "medio" | "alto">("medio");
+  const [bilhete, setBilhete] = useState<Bilhete | null>(null);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
