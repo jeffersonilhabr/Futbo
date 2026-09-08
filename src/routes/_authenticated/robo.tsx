@@ -165,6 +165,30 @@ function RoboPage() {
     onError: (error: Error) => toast.error(error.message),
   });
 
+  const bilheteMutation = useMutation({
+    mutationFn: async () =>
+      montarBilhete({ data: { contexto: contexto.trim(), entradas: qtdEntradas, risco } }),
+    onSuccess: (result) => setBilhete(result),
+    onError: (error: Error) => toast.error(error.message),
+  });
+
+  const salvarBilheteMutation = useMutation({
+    mutationFn: async (ticket: Bilhete) => {
+      for (const entrada of ticket.entradas) {
+        await createPalpite({
+          data: {
+            teamName: entrada.jogo,
+            market: entrada.mercado,
+            rate: entrada.oddEstimada,
+            note: `[BILHETE ${ticket.titulo}] ${entrada.justificativa}`.slice(0, 400),
+          },
+        });
+      }
+    },
+    onSuccess: () => toast.success("Bilhete salvo no seu histórico"),
+    onError: (error: Error) => toast.error(error.message),
+  });
+
   function send(question: string) {
     const text = question.trim();
     if (!text || askMutation.isPending) return;
@@ -182,6 +206,81 @@ function RoboPage() {
         <p className="mt-2 text-sm text-muted-foreground">
           Peça sugestões de entradas e salve as que gostar no seu histórico. Estimativas — aposte com responsabilidade.
         </p>
+
+        <section className="panel mt-6 space-y-4 p-5">
+          <h2 className="flex items-center gap-2 font-display text-2xl">
+            <Ticket className="h-5 w-5 text-primary" /> Montar bilhete
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Diga os jogos ou campeonatos e o robô monta um bilhete com os mercados mais prováveis.
+          </p>
+
+          <form
+            className="space-y-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (contexto.trim().length === 0 || bilheteMutation.isPending) return;
+              bilheteMutation.mutate();
+            }}
+          >
+            <Input
+              value={contexto}
+              onChange={(event) => setContexto(event.target.value)}
+              placeholder="Ex.: jogos do Brasileirão hoje, foco em gols e escanteios"
+            />
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm text-muted-foreground">Entradas:</span>
+              {[2, 3, 4, 5, 6].map((n) => (
+                <Button
+                  key={n}
+                  type="button"
+                  size="sm"
+                  variant={qtdEntradas === n ? "default" : "outline"}
+                  onClick={() => setQtdEntradas(n)}
+                >
+                  {n}
+                </Button>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm text-muted-foreground">Perfil:</span>
+              {riscos.map((r) => (
+                <Button
+                  key={r.valor}
+                  type="button"
+                  size="sm"
+                  variant={risco === r.valor ? "default" : "outline"}
+                  onClick={() => setRisco(r.valor)}
+                >
+                  {r.rotulo}
+                </Button>
+              ))}
+            </div>
+
+            <Button type="submit" disabled={bilheteMutation.isPending || contexto.trim().length === 0}>
+              {bilheteMutation.isPending ? (
+                <>
+                  <LoaderCircle className="h-4 w-4 animate-spin" /> Montando bilhete...
+                </>
+              ) : (
+                <>
+                  <Ticket className="h-4 w-4" /> Montar bilhete
+                </>
+              )}
+            </Button>
+          </form>
+        </section>
+
+        {bilhete ? (
+          <BilheteCard
+            bilhete={bilhete}
+            salvando={salvarBilheteMutation.isPending}
+            onSalvar={() => salvarBilheteMutation.mutate(bilhete)}
+          />
+        ) : null}
+
 
         <div className="mt-6 space-y-4">
           {messages.map((message, index) => (
