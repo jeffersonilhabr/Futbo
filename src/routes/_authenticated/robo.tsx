@@ -7,7 +7,6 @@ import { toast } from "sonner";
 
 import { askRoboFn, type RoboTip } from "@/lib/robo.functions";
 import { createPalpiteFn } from "@/lib/palpites.functions";
-import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -105,7 +104,6 @@ function RoboPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
       <main className="mx-auto w-full max-w-3xl px-4 py-8">
         <h1 className="flex items-center gap-2 font-display text-4xl">
           <Bot className="h-8 w-8 text-primary" /> Pedir palpites ao robô
