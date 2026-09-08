@@ -14,6 +14,23 @@ export type RoboAnswer = {
   palpites: RoboTip[];
 };
 
+export type BilheteEntrada = {
+  jogo: string;
+  mercado: string;
+  probabilidade: number;
+  oddEstimada: number;
+  justificativa: string;
+};
+
+export type Bilhete = {
+  titulo: string;
+  entradas: BilheteEntrada[];
+  oddTotal: number;
+  probabilidadeTotal: number;
+  risco: "baixo" | "medio" | "alto";
+  resumo: string;
+};
+
 const messageSchema = z.object({
   role: z.enum(["user", "assistant"]),
   content: z.string().min(1).max(2000),
