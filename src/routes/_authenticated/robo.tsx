@@ -2,10 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Bot, LoaderCircle, Send, Sparkles, User } from "lucide-react";
+import { Bot, LoaderCircle, Send, Sparkles, Ticket, User } from "lucide-react";
 import { toast } from "sonner";
 
-import { askRoboFn, type RoboTip } from "@/lib/robo.functions";
+import {
+  askRoboFn,
+  montarBilheteFn,
+  type Bilhete,
+  type RoboTip,
+} from "@/lib/robo.functions";
 import { createPalpiteFn } from "@/lib/palpites.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
