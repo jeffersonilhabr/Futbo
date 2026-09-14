@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { BarChart3, Bot, ListChecks, LogIn, LogOut } from "lucide-react";
+import { BarChart3, Bot, ListChecks, LogIn, LogOut, Ticket } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -18,6 +18,11 @@ export function SiteHeader() {
         <Button asChild variant="ghost" size="sm">
           <Link to="/robo">
             <Bot className="h-4 w-4" /> Pedir ao robô
+          </Link>
+        </Button>
+        <Button asChild variant="ghost" size="sm">
+          <Link to="/bilhetes">
+            <Ticket className="h-4 w-4" /> Bilhetes
           </Link>
         </Button>
         <Button asChild variant="ghost" size="sm">

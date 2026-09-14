@@ -133,3 +133,17 @@ export const listBotPredictionsFn = createServerFn({ method: "POST" })
     return rows ?? [];
   });
 
+
+// Bilhetes salvos: palpites criados a partir de um bilhete montado pelo robô
+export const listBilheteEntriesFn = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: rows, error } = await context.supabase
+      .from("palpites")
+      .select("*")
+      .eq("user_id", context.userId)
+      .like("note", "[BILHETE %")
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });

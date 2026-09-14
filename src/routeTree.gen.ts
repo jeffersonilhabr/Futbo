@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedBilhetesRouteImport } from './routes/_authenticated/bilhetes'
 import { Route as AuthenticatedPalpitesRouteImport } from './routes/_authenticated/palpites'
 import { Route as AuthenticatedRoboRouteImport } from './routes/_authenticated/robo'
 import { Route as AdminBotRouteImport } from './routes/admin/bot'
@@ -30,6 +31,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedBilhetesRoute = AuthenticatedBilhetesRouteImport.update({
+  id: '/bilhetes',
+  path: '/bilhetes',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPalpitesRoute = AuthenticatedPalpitesRouteImport.update({
   id: '/palpites',
@@ -55,6 +61,7 @@ const ApiBotPredictionsRoute = ApiBotPredictionsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bilhetes': typeof AuthenticatedBilhetesRoute
   '/palpites': typeof AuthenticatedPalpitesRoute
   '/robo': typeof AuthenticatedRoboRoute
   '/admin/bot': typeof AdminBotRoute
@@ -63,6 +70,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bilhetes': typeof AuthenticatedBilhetesRoute
   '/palpites': typeof AuthenticatedPalpitesRoute
   '/robo': typeof AuthenticatedRoboRoute
   '/admin/bot': typeof AdminBotRoute
@@ -73,6 +81,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/bilhetes': typeof AuthenticatedBilhetesRoute
   '/_authenticated/palpites': typeof AuthenticatedPalpitesRoute
   '/_authenticated/robo': typeof AuthenticatedRoboRoute
   '/admin/bot': typeof AdminBotRoute
@@ -83,6 +92,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/bilhetes'
     | '/palpites'
     | '/robo'
     | '/admin/bot'
@@ -91,6 +101,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/bilhetes'
     | '/palpites'
     | '/robo'
     | '/admin/bot'
@@ -100,6 +111,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/bilhetes'
     | '/_authenticated/palpites'
     | '/_authenticated/robo'
     | '/admin/bot'
@@ -137,6 +149,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/bilhetes': {
+      id: '/_authenticated/bilhetes'
+      path: '/bilhetes'
+      fullPath: '/bilhetes'
+      preLoaderRoute: typeof AuthenticatedBilhetesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/palpites': {
       id: '/_authenticated/palpites'
       path: '/palpites'
@@ -169,11 +188,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedBilhetesRoute: typeof AuthenticatedBilhetesRoute
   AuthenticatedPalpitesRoute: typeof AuthenticatedPalpitesRoute
   AuthenticatedRoboRoute: typeof AuthenticatedRoboRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedBilhetesRoute: AuthenticatedBilhetesRoute,
   AuthenticatedPalpitesRoute: AuthenticatedPalpitesRoute,
   AuthenticatedRoboRoute: AuthenticatedRoboRoute,
 }
