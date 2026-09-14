@@ -21,6 +21,11 @@ export function SiteHeader() {
           </Link>
         </Button>
         <Button asChild variant="ghost" size="sm">
+          <Link to="/bilhetes">
+            <Ticket className="h-4 w-4" /> Bilhetes
+          </Link>
+        </Button>
+        <Button asChild variant="ghost" size="sm">
           <Link to="/palpites">
             <ListChecks className="h-4 w-4" /> Meus palpites
           </Link>
