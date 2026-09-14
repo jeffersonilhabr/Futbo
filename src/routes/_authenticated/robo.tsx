@@ -209,29 +209,31 @@ function RoboPage() {
 
         <section className="panel mt-6 space-y-4 p-5">
           <h2 className="flex items-center gap-2 font-display text-2xl">
-            <Ticket className="h-5 w-5 text-primary" /> Montar bilhete
+            <Ticket className="h-5 w-5 text-primary" /> Bilhete pré-montado
           </h2>
           <p className="text-sm text-muted-foreground">
-            Diga os jogos ou campeonatos e o robô monta um bilhete com os mercados mais prováveis.
+            Escolha quantos palpites quer no bilhete. O robô analisa a forma recente, médias de gols,
+            escanteios e cartões (padrão Flashscore/Sofascore) e monta o bilhete. Se quiser, diga os jogos
+            ou campeonatos — senão ele escolhe sozinho.
           </p>
 
           <form
             className="space-y-3"
             onSubmit={(event) => {
               event.preventDefault();
-              if (contexto.trim().length === 0 || bilheteMutation.isPending) return;
+              if (bilheteMutation.isPending) return;
               bilheteMutation.mutate();
             }}
           >
             <Input
               value={contexto}
               onChange={(event) => setContexto(event.target.value)}
-              placeholder="Ex.: jogos do Brasileirão hoje, foco em gols e escanteios"
+              placeholder="Opcional: jogos do Brasileirão hoje, foco em gols e escanteios"
             />
 
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-muted-foreground">Entradas:</span>
-              {[2, 3, 4, 5, 6].map((n) => (
+              <span className="text-sm text-muted-foreground">Palpites no bilhete:</span>
+              {[2, 3, 4, 5, 6, 7, 8].map((n) => (
                 <Button
                   key={n}
                   type="button"
