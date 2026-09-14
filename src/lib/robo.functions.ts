@@ -172,11 +172,17 @@ export const montarBilheteFn = createServerFn({ method: "POST" })
               "(odd ≈ 100/probabilidade). Perfil de risco baixo = probabilidades acima de 75%; " +
               "médio = 60-80%; alto = mercados de maior retorno. " +
               "oddTotal é a multiplicação das odds e probabilidadeTotal a multiplicação das probabilidades. " +
-              "No resumo, diga que são estimativas e que apostas envolvem risco.",
+              "Baseie as análises em dados de desempenho recente típicos de sites de estatística esportiva " +
+              "(Flashscore, Sofascore, FBref): forma das últimas partidas, médias de gols, escanteios, cartões e mando de campo. " +
+              "Se nenhum contexto for informado, escolha por conta própria jogos de campeonatos populares " +
+              "(Brasileirão, Premier League, La Liga, Champions) e diga no título que é um bilhete pré-montado. " +
+              "No resumo, cite em que tipo de estatística se baseou e diga que são estimativas e que apostas envolvem risco.",
           },
           {
             role: "user",
-            content: `Monte um bilhete com ${data.entradas} entradas, perfil de risco ${data.risco}. Contexto: ${data.contexto}`,
+            content: data.contexto
+              ? `Monte um bilhete com ${data.entradas} entradas, perfil de risco ${data.risco}. Contexto: ${data.contexto}`
+              : `Monte um bilhete PRÉ-MONTADO com ${data.entradas} entradas, perfil de risco ${data.risco}. Escolha você mesmo os jogos e mercados mais prováveis dos principais campeonatos.`,
           },
         ],
         response_format: {
