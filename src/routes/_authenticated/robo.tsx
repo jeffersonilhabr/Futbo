@@ -261,14 +261,14 @@ function RoboPage() {
               ))}
             </div>
 
-            <Button type="submit" disabled={bilheteMutation.isPending || contexto.trim().length === 0}>
+            <Button type="submit" disabled={bilheteMutation.isPending}>
               {bilheteMutation.isPending ? (
                 <>
-                  <LoaderCircle className="h-4 w-4 animate-spin" /> Montando bilhete...
+                  <LoaderCircle className="h-4 w-4 animate-spin" /> Analisando e montando...
                 </>
               ) : (
                 <>
-                  <Ticket className="h-4 w-4" /> Montar bilhete
+                  <Ticket className="h-4 w-4" /> Gerar bilhete pré-montado
                 </>
               )}
             </Button>
