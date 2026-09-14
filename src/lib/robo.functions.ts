@@ -140,11 +140,11 @@ export const montarBilheteFn = createServerFn({ method: "POST" })
   .validator((input) =>
     z
       .object({
-        contexto: z.string().trim().min(1).max(600),
-        entradas: z.number().int().min(2).max(8).default(3),
+        contexto: z.string().trim().max(600).optional().default(""),
+        entradas: z.number().int().min(1).max(10).default(3),
         risco: z.enum(["baixo", "medio", "alto"]).default("medio"),
       })
-      .parse(input),
+      .parse(input ?? {}),
   )
   .handler(async ({ data }): Promise<Bilhete> => {
     const apiKey = process.env["LOVABLE_API_KEY"];
